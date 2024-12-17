@@ -1,6 +1,6 @@
 {
-  "database_url":"mssql://username:password@hostname:port/Ni_No_Kuni",
+  "database_url":"postgres://postgres:password@host:port/Ni_No_Kuni",
   
-  "encoding": "Polish_100_CS_AS_SC_UTF8",
+  "encoding": "UTF8",
   "_comment": "To encode polish signs."
 }
