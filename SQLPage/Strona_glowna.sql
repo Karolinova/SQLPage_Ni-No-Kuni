@@ -19,3 +19,13 @@ select 'title' as component
 -- Add image on main page
 select 'html' as component
 , '<br><img src ="ni_no_kuni.jpg" width="600" style="display: block;margin-left: auto;margin-right: auto;width: 50%;"/><br>' as html
+
+-- Add menu
+select 'datagrid' as component
+;
+
+select 'Stworzenia' as description
+,'Stworzenia/stworzenia.sql' as link;
+select 'Postacie' as description
+, '/' as link
+;
