@@ -1,4 +1,4 @@
--- Table 'Stworzenia'
+-- Table 'Stworzenia' (all familiars)
 create table stworzenia (id bigserial primary key
 , nazwa varchar
 , gatunek varchar
