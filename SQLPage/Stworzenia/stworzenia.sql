@@ -19,10 +19,19 @@ select 'title' as component
 
 -- Add filtration
 select 'form' as component
-, 'Filtrowanie po stworzeniach' as title
-, 'Filtruj' as validate
-, 'stworzenia_filtrowanie.sql' as action;
+, 'Wybór gry' as title
+, 'Wybierz' as validate
+, 'st_wybor_gry.sql.sql' as action;
 
-select 'Rodzaj' as name
-,  'input' as type
-;
+with lista_gier as (
+    select 'select' as type
+    -- , 'Kolumna' as name
+    , jsonb_agg(json_build_object(
+        'label', wartosc,
+        'value', wartosc,
+        'selected', nazwa in (select value from jsonb_array_elements_text($selected_id::jsonb))
+    ))::text as OPTIONS
+    -- , 4 as width
+    from help_list where nazwa='Gra'
+)
+select * from lista_gier;
