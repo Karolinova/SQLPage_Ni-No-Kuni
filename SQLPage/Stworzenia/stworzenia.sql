@@ -21,15 +21,15 @@ select 'title' as component
 select 'form' as component
 , 'Wybór gry' as title
 , 'Wybierz' as validate
-, 'st_wybor_gry.sql.sql' as action;
+, 'st_wybor_gry.sql' as action;
 
 with lista_gier as (
     select 'select' as type
-    -- , 'Kolumna' as name
+    , 'Kolumna' as name -- we need this to filter
     , jsonb_agg(json_build_object(
         'label', wartosc,
         'value', wartosc,
-        'selected', nazwa in (select value from jsonb_array_elements_text($selected_id::jsonb))
+        'selected', 'selected', wartosc = $selected 
     ))::text as OPTIONS
     -- , 4 as width
     from help_list where nazwa='Gra'
