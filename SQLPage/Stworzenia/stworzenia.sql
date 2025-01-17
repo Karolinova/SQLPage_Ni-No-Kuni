@@ -21,6 +21,7 @@ select 'title' as component
 select 'form' as component
 , 'Wybór gry' as title
 , 'Wybierz' as validate
+, 'przycisk' as class
 , 'st_wybor_gry.sql' as action;
 
 with lista_gier as (
