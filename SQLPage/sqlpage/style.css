@@ -1,0 +1,10 @@
+.przycisk{
+    display: block;
+    text-align: right;
+}
+
+.obrazki_naglowek{
+    display: flex; 
+    justify-content: center; 
+    gap: 20px;
+}
