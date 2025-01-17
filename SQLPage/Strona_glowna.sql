@@ -18,6 +18,7 @@ select 'title' as component
 
 -- Add image on main page
 select 'html' as component
+, 'obrazki_naglowek' as class
 , '<br>
     <img src ="ni_no_kuni.jpg" width="600" style="max-width: 600px; height: auto;"/>
     <img src ="ni_no_kuni_II.jpg" width="600" style="max-width: 600px; height: auto;"/>
