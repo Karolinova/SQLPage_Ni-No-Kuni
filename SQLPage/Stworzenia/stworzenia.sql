@@ -27,6 +27,7 @@ select 'form' as component
 with lista_gier as (
     select 'select' as type
     , 'Kolumna' as name -- we need this to filter
+    ,'' as label
     , jsonb_agg(json_build_object(
         'label', wartosc,
         'value', wartosc,
