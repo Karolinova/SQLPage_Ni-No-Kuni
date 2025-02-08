@@ -13,6 +13,33 @@ select 'title' as component
    , :Kolumna as contents
    , true as center;
 
+-- Add filtration to table - select genus
+select 'form' as component
+, 'Szukaj stworzenia' as title
+, 'Szukaj' as validate
+, 'przycisk' as class
+, 'szukaj_stworzenia.sql?id='||id||'' as action
+from help_list
+where nazwa='Gra'
+and wartosc=:Kolumna;
+
+with lista_gatunkow as (
+    select 'select' as type
+    ,'gatunek' as name
+    ,'Wybierz z listy gatunek' as label
+    ,'pytanie' as class
+    , jsonb_agg(json_build_object(
+        'label', nazwa,
+        'value', nazwa,
+        'selected', nazwa = $selected  --nazwa in (select value from jsonb_array_elements_text($selected_ids::jsonb))
+        -- nazwa = 'Ni no Kuni: Wrath of the White Witch'
+    ))::text as OPTIONS
+    -- , 4 as width
+    from gatunek
+)
+select * from lista_gatunkow;
+
+
 -- Add filter result
 select 'table' as component;
 
@@ -26,7 +53,7 @@ select imie, gatunek, nazwa, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 
          join triki_zaklecia t1 on t1.id = trik1_id
          join triki_zaklecia t2 on t2.id = trik2_id
          join triki_zaklecia t3 on t3.id = trik3_id
-         join gatunek g on g.id = s.gatunek_id
+         join gatunek g on g.g_id = s.gatunek_id
          join recepta r on r.id = g.przysmak_id
          union all
          select 'Ni no Kuni II: Revenant Kingdom' as gra
@@ -37,7 +64,7 @@ select imie, gatunek, nazwa, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 
          join triki_zaklecia t1 on t1.id = trik1_id
          join triki_zaklecia t2 on t2.id = trik2_id
          join triki_zaklecia t3 on t3.id = trik3_id
-         join gatunek g on g.id = s.gatunek_id
+         join gatunek g on g.g_id = s.gatunek_id
          join recepta r on r.id = g.przysmak_id
          union all
          select 'Ni No Kuni I/Ni no Kuni II' as gra
@@ -51,7 +78,7 @@ select imie, gatunek, nazwa, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 
          join triki_zaklecia t1 on t1.id = trik1_id
          join triki_zaklecia t2 on t2.id = trik2_id
          join triki_zaklecia t3 on t3.id = trik3_id
-         join gatunek g on g.id = s.gatunek_id
+         join gatunek g on g.g_id = s.gatunek_id
          join recepta r on r.id = g.przysmak_id
          union all
          select s2.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec
@@ -61,7 +88,7 @@ select imie, gatunek, nazwa, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 
          join triki_zaklecia t1 on t1.id = trik1_id
          join triki_zaklecia t2 on t2.id = trik2_id
          join triki_zaklecia t3 on t3.id = trik3_id
-         join gatunek g on g.id = s.gatunek_id
+         join gatunek g on g.g_id = s.gatunek_id
          join recepta r on r.id = g.przysmak_id) nnk1_nnk2
       ) as dane
 where gra = :Kolumna;
