@@ -19,3 +19,7 @@ alter table gatunek
 add column g1_2_id int;
 alter table gatunek
 add constraint FK_gra1_2 foreign key(g1_2_id) references help_list (id);
+
+-- Rename column
+alter table gatunek 
+rename column id to g_id;
