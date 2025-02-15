@@ -19,11 +19,27 @@ select 'form' as component
 , 'Szukaj' as validate
 , 'przycisk' as class
 , 'szukaj_stworzenia.sql?id='||id||'' as action
+, 'Wyczyść' as reset
 from help_list
 where nazwa='Gra'
 and wartosc=:Kolumna;
 
-with lista_gatunkow as (
+-- select name
+with imie as (
+    select 'select' as TYPE
+    , 'imie' as NAME
+    , 'Wpisz imię' as LABEL
+    , 'pytanie' as class
+    , jsonb_agg(json_build_object(
+    'label', imie,
+    'value', imie,
+    'selected', imie  = $selected --in (select imie from stworzenia_nnk WHERE imie LIKE '%' || $selected)
+    ))::text as options
+    , 4 as width
+    from stworzenia_nnk
+)
+-- select genus
+, lista_gatunkow as (
     select 'select' as type
     ,'gatunek' as name
     ,'Wybierz z listy gatunek' as label
@@ -37,8 +53,27 @@ with lista_gatunkow as (
     -- , 4 as width
     from gatunek
 )
+-- select name of genus
+, nazwa as (
+    select 'select' as type
+    , 'nazwa' as name
+    , 'Wybierz nazwę' as label
+    , 'pytanie' as class
+    , jsonb_agg(json_build_object(
+        'label', nazwa,
+        'value', nazwa,
+        'selected', nazwa = $selected  --nazwa in (select value from jsonb_array_elements_text($selected_ids::jsonb))
+        -- nazwa = 'Ni no Kuni: Wrath of the White Witch'
+    ))::text as OPTIONS
+    , 4 as width
+    from stworzenia
+)
+select * from imie
+union all
 select * from lista_gatunkow;
-
+union all
+select * from nazwa
+;
 
 -- Add filter result
 select 'table' as component;
@@ -46,49 +81,53 @@ select 'table' as component;
 select imie, gatunek, nazwa, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 3"
       from (
          select 'Ni no Kuni: Wrath of the White Witch' as gra
-         , s1.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec
+         , stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec
          , t1.nazwa as "Trik 1", t2.nazwa as "Trik 2", t3.nazwa as "Trik 3"
          from stworzenia s 
-         join stworzenia_nnk1 s1 on s1.stw_id = s.id
-         join triki_zaklecia t1 on t1.id = trik1_id
-         join triki_zaklecia t2 on t2.id = trik2_id
-         join triki_zaklecia t3 on t3.id = trik3_id
+         join stworzenia_nnk stw on stw.stw_id = s.id
+         join triki_zaklecia t1 on t1.id = s.trik1_id
+         join triki_zaklecia t2 on t2.id = s.trik2_id
+         join triki_zaklecia t3 on t3.id = s.trik3_id
          join gatunek g on g.g_id = s.gatunek_id
          join recepta r on r.id = g.przysmak_id
+         where stw.gra_id = 1
          union all
          select 'Ni no Kuni II: Revenant Kingdom' as gra
-         , s2.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec
+         , stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec
          , t1.nazwa as "Trik 1", t2.nazwa as "Trik 2", t3.nazwa as "Trik 3"
          from stworzenia s 
-         join stworzenia_nnk2 s2 on s2.stw_id = s.id
-         join triki_zaklecia t1 on t1.id = trik1_id
-         join triki_zaklecia t2 on t2.id = trik2_id
-         join triki_zaklecia t3 on t3.id = trik3_id
+         join stworzenia_nnk stw on stw.stw_id = s.id
+         join triki_zaklecia t1 on t1.id = s.trik1_id
+         join triki_zaklecia t2 on t2.id = s.trik2_id
+         join triki_zaklecia t3 on t3.id = s.trik3_id
          join gatunek g on g.g_id = s.gatunek_id
          join recepta r on r.id = g.przysmak_id
+         where stw.gra_id = 2
          union all
          select 'Ni No Kuni I/Ni no Kuni II' as gra
          , nnk1_nnk2.imie, nnk1_nnk2.nazwa, nnk1_nnk2.gatunek, nnk1_nnk2.nazwa_rec
          , nnk1_nnk2."Trik 1", nnk1_nnk2."Trik 2", nnk1_nnk2."Trik 3"
          from
-         (select s1.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec
+         (select stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec
          , t1.nazwa as "Trik 1", t2.nazwa as "Trik 2", t3.nazwa as "Trik 3"
          from stworzenia s 
-         join stworzenia_nnk1 s1 on s1.stw_id = s.id
-         join triki_zaklecia t1 on t1.id = trik1_id
-         join triki_zaklecia t2 on t2.id = trik2_id
-         join triki_zaklecia t3 on t3.id = trik3_id
+         join stworzenia_nnk stw on stw.stw_id = s.id
+         join triki_zaklecia t1 on t1.id = s.trik1_id
+         join triki_zaklecia t2 on t2.id = s.trik2_id
+         join triki_zaklecia t3 on t3.id = s.trik3_id
          join gatunek g on g.g_id = s.gatunek_id
          join recepta r on r.id = g.przysmak_id
+         where stw.gra_id = 1
          union all
-         select s2.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec
+         select stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec
          , t1.nazwa as "Trik 1", t2.nazwa as "Trik 2", t3.nazwa as "Trik 3"
          from stworzenia s 
-         join stworzenia_nnk2 s2 on s2.stw_id = s.id
-         join triki_zaklecia t1 on t1.id = trik1_id
-         join triki_zaklecia t2 on t2.id = trik2_id
-         join triki_zaklecia t3 on t3.id = trik3_id
+         join stworzenia_nnk stw on stw.stw_id = s.id
+         join triki_zaklecia t1 on t1.id = s.trik1_id
+         join triki_zaklecia t2 on t2.id = s.trik2_id
+         join triki_zaklecia t3 on t3.id = s.trik3_id
          join gatunek g on g.g_id = s.gatunek_id
-         join recepta r on r.id = g.przysmak_id) nnk1_nnk2
+         join recepta r on r.id = g.przysmak_id
+         where stw.gra_id = 2) nnk1_nnk2
       ) as dane
 where gra = :Kolumna;
