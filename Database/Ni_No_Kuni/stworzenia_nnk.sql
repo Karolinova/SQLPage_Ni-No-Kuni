@@ -1,6 +1,7 @@
 -- table 'stworzenia_nnk1' (familiars from Ni No Kuni: Wrath of The White Witch)
-create table stworzenia_nnk (stw_id bigserial primary key
+create table stworzenia_nnk (id bigserial primary key
 , imie varchar
+, stw_id int
 , constraint FK_stworzenia1 foreign key(stw_id) references stworzenia (id)
 , gra_id int
 , constraint FK_gra foreign key(gra_id) references help_list (id)
