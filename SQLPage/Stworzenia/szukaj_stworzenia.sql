@@ -39,7 +39,7 @@ select * from lista_gatunkow;
 -- Add filter result
 select 'table' as component;
 
-select imie, gatunek, nazwa, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 3"
+select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 3"
       from (
          select 1 as gra --Ni no Kuni: Wrath of the White Witch
          , stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec 
