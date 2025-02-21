@@ -28,57 +28,87 @@ and wartosc=:Kolumna;
 with imie as (
     select 'select' as TYPE
     , 'imie' as NAME
-    , 'Wpisz imię' as LABEL
+    , 'Imię' as LABEL
     , 'pytanie' as class
-    , jsonb_agg(json_build_object(
-    'label', imie,
-    'value', imie,
-    'selected', imie  = $selected --in (select imie from stworzenia_nnk WHERE imie LIKE '%' || $selected)
-    ))::text as options
-    , 4 as width
-    from stworzenia_nnk
+    ,  '[{"label": "Wybierz imię", "value": "Wybierz imię"}]'::jsonb || jsonb_agg(json_build_object(
+    'label', s.imie,
+    'value', s.imie )) as options
+    , 2 as width
+    from stworzenia_nnk s
+    join help_list hl on hl.id=s.gra_id
+    -- list of names depends on the game
+    where nazwa = 'Gra'
+    and wartosc = :Kolumna
 )
 -- select genus
 , lista_gatunkow as (
     select 'select' as type
     ,'gatunek' as name
-    ,'Wybierz z listy gatunek' as label
+    ,'Gatunek' as label
     ,'pytanie' as class
-    , jsonb_agg(json_build_object(
+    , '[{"label": "Wybierz gatunek", "value": "Wybierz gatunek"}]'::jsonb || jsonb_agg(json_build_object(
         'label', nazwa,
-        'value', nazwa,
-        'selected', nazwa = $selected  --nazwa in (select value from jsonb_array_elements_text($selected_ids::jsonb))
-        -- nazwa = 'Ni no Kuni: Wrath of the White Witch'
-    ))::text as OPTIONS
-    -- , 4 as width
-    from gatunek
+        'value', nazwa )) as OPTIONS
+    , 2 as width
+    from (
+        select DISTINCT nazwa from gatunek ORDER BY nazwa
+    ) gatunek
 )
 -- select name of genus
 , nazwa as (
     select 'select' as type
     , 'nazwa' as name
-    , 'Wybierz nazwę' as label
+    , 'Nazwa' as label
     , 'pytanie' as class
-    , jsonb_agg(json_build_object(
+    , '[{"label": "Wybierz nazwę", "value": "Wybierz nazwę"}]'::jsonb || jsonb_agg(json_build_object(
         'label', nazwa,
-        'value', nazwa,
-        'selected', nazwa = $selected  --nazwa in (select value from jsonb_array_elements_text($selected_ids::jsonb))
-        -- nazwa = 'Ni no Kuni: Wrath of the White Witch'
-    ))::text as OPTIONS
-    , 4 as width
+        'value', nazwa )) as OPTIONS
+    , 2 as width
     from stworzenia
+)
+-- select treat
+, przysmak AS (
+        select 'select' as type
+    , 'przysmak' as name
+    , 'Przysmak' as label
+    , 'pytanie' as class
+    , '[{"label": "Wybierz przysmak", "value": "Wybierz przysmak"}]'::jsonb || jsonb_agg(json_build_object(
+        'label', r.nazwa,
+        'value', r.nazwa
+    )) as OPTIONS
+    , 2 as width
+    from gatunek g
+    join recepta r on r.id = g.przysmak_id
+)
+-- select tricks
+, triki AS (
+        select 'select' as type
+    , 'triki' as name
+    , 'Triki' as label
+    , 'pytanie' as class
+    , '[{"label": "Wybierz trik", "value": "Wybierz trik"}]'::jsonb || jsonb_agg(json_build_object(
+        'label', nazwa,
+        'value', nazwa
+    )) as OPTIONS
+    , 2 as width
+    from  triki_zaklecia
+    where stworzenie_postac = 'S'
 )
 select * from imie
 union all
-select * from lista_gatunkow;
+select * from nazwa;
 union all
-select * from nazwa
+select * from lista_gatunkow
+union all
+select * from przysmak
+union all
+select * from triki
 ;
 
 -- Add filter result
 select 'table' as component;
 
-select imie, gatunek, nazwa, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 3"
+select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 3"
       from (
          select 'Ni no Kuni: Wrath of the White Witch' as gra
          , stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec
