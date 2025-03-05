@@ -128,7 +128,7 @@ select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 
          join stworzenia_nnk stw on stw.stw_id = s.id
          join triki_zaklecia t1 on t1.id = s.trik1_id
          join triki_zaklecia t2 on t2.id = s.trik2_id
-         join triki_zaklecia t3 on t3.id = s.trik3_id
+         left join triki_zaklecia t3 on t3.id = s.trik3_id
          join gatunek g on g.g_id = s.gatunek_id 
          join recepta r on r.id = g.przysmak_id 
          where stw.gra_id = 1
@@ -140,7 +140,7 @@ select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 
          join stworzenia_nnk stw on s2.stw_id = s.id
          join triki_zaklecia t1 on t1.id = s.trik1_id
          join triki_zaklecia t2 on t2.id = s.trik2_id
-         join triki_zaklecia t3 on t3.id = s.trik3_id
+         left join triki_zaklecia t3 on t3.id = s.trik3_id
          join gatunek g on g.g_id = s.gatunek_id 
          join recepta r on r.id = g.przysmak_id 
          where stw.gra_id = 2
@@ -156,7 +156,7 @@ select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 
          join stworzenia_nnk stw on stw.stw_id = s.id
          join triki_zaklecia t1 on t1.id = s.trik1_id
          join triki_zaklecia t2 on t2.id = s.trik2_id
-         join triki_zaklecia t3 on t3.id = s.trik3_id
+         left join triki_zaklecia t3 on t3.id = s.trik3_id
          join gatunek g on g.g_id = s.gatunek_id 
          join recepta r on r.id = g.przysmak_id 
          where stw.gra_id = 1
@@ -168,11 +168,26 @@ select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 
          join stworzenia_nnk stw on stw.stw_id = s.id
          join triki_zaklecia t1 on t1.id = s.trik1_id
          join triki_zaklecia t2 on t2.id = s.trik2_id
-         join triki_zaklecia t3 on t3.id = s.trik3_id
+         left join triki_zaklecia t3 on t3.id = s.trik3_id
          join gatunek g on g.g_id = s.gatunek_id 
          join recepta r on r.id = g.przysmak_id 
          where stw.gra_id = 2
          ) nnk1_nnk2
       ) as dane
 where gra = $id
-and gatunek = :gatunek;
+and case when :imie <>'Wybierz imię' then imie = :imie
+    else imie <>'Wybierz imię'
+    end
+and case when :nazwa <>'Wybierz nazwę' then nazwa = :nazwa
+    else nazwa <>'Wybierz nazwę'
+    end
+and case when :gatunek <>'Wybierz gatunek' then gatunek = :gatunek
+    else gatunek <>'Wybierz gatunek'
+    end
+and case when :przysmak <>'Wybierz przysmak' then nazwa_rec = :przysmak
+    else nazwa_rec <>'Wybierz przysmak'
+    end
+and case when :triki<>'Wybierz trik' then "Trik 1"=:triki or "Trik 2"=:triki or "Trik 3"=:triki
+    else "Trik 1"<>'Wybierz trik' or "Trik 2"<>'Wybierz trik' or "Trik 3"<>'Wybierz trik'
+    end
+ ;
