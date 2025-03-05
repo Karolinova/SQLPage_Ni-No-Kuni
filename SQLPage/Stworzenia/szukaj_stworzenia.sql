@@ -22,27 +22,99 @@ select 'form' as component
 , 'Szukaj stworzenia' as title
 , 'Szukaj' as validate
 , 'przycisk' as class
-, 'szukaj_stworzenia.sql' as action
+, 'szukaj_stworzenia.sql?id='||id||'' as action
+from help_list hl
+where hl.nazwa='Gra'
+and id = $id::BIGINT
 ;
 
+-- Name is selected
+with imie as (
+    select 'select' as TYPE
+    , 'imie' as NAME
+    , 'Imię' as LABEL
+    , 'pytanie' as class
+    ,  '[{"label": "Wybierz imię", "value": "Wybierz imię"}]'::jsonb || jsonb_agg(json_build_object(
+        'label', s.imie,
+        'value', s.imie,
+        'selected', imie = :imie )) as options
+    , 2 as width
+    from stworzenia_nnk s
+    where case when $id::BIGINT = 1 then s.gra_id = 1
+        when $id::BIGINT = 2 then s.gra_id = 2
+        when $id::BIGINT = 3 then s.gra_id in (1,2)
+        end
+)
+-- Name of genus is selected
+, nazwa as (
+    select 'select' as type
+    , 'nazwa' as name
+    , 'Nazwa' as label
+    , 'pytanie' as class
+    , '[{"label": "Wybierz nazwę", "value": "Wybierz nazwę"}]'::jsonb || jsonb_agg(json_build_object(
+        'label', nazwa,
+        'value', nazwa,
+        'selected', nazwa = :nazwa
+    )) as OPTIONS
+    , 2 as width
+    from stworzenia
+)
 -- Genus is selected
 with lista_gatunkow as (
     select 'select' as type
     ,'gatunek' as name
-    ,'Wybierz z listy gatunek' as label
+    ,'Gatunek' as label
     ,'pytanie' as class
-    , true as disabled
-    , jsonb_agg(json_build_object(
+    , '[{"label": "Wybierz gatunek", "value": "Wybierz gatunek"}]'::jsonb || jsonb_agg(json_build_object(
         'label', nazwa,
         'value', nazwa,
-        'selected', nazwa = $selected  --nazwa in (select value from jsonb_array_elements_text($selected_ids::jsonb))
-        -- nazwa = 'Ni no Kuni: Wrath of the White Witch'
-    ))::text as OPTIONS
-    -- , 4 as width
+        'selected', nazwa = :gatunek
+    )) as OPTIONS
+    , 2 as width
     from gatunek
-    where nazwa =:gatunek
 )
-select * from lista_gatunkow;
+-- Treat is selected
+, przysmak AS (
+    select 'select' as type
+    , 'przysmak' as name
+    , 'Przysmak' as label
+    , 'pytanie' as class
+    , '[{"label": "Wybierz przysmak", "value": "Wybierz przysmak"}]'::jsonb || jsonb_agg(json_build_object(
+        'label', nazwa,
+        'value', nazwa,
+        'selected', nazwa = :przysmak
+    )) as OPTIONS
+    , 2 as width
+    from 
+    (select r.nazwa
+    from gatunek g
+    join recepta r on r.id = g.przysmak_id
+    group by r.nazwa) x
+)
+-- Trick is selected
+, triki AS (
+    select 'select' as type
+    , 'triki' as name
+    , 'Triki' as label
+    , 'pytanie' as class
+    , '[{"label": "Wybierz trik", "value": "Wybierz trik"}]'::jsonb ||  jsonb_agg(json_build_object(
+        'label', nazwa,
+        'value', nazwa,
+        'selected', nazwa = :triki
+    )) as OPTIONS
+    , 2 as width
+    from  triki_zaklecia
+    where stworzenie_postac = 'S'
+)
+select * from imie
+union all
+select * from nazwa
+union all
+select * from lista_gatunkow
+union all
+select * from przysmak
+union all
+select * from triki;
 
 -- Add filter result
 select 'table' as component;
