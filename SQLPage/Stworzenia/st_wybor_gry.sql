@@ -19,7 +19,6 @@ select 'form' as component
 , 'Szukaj' as validate
 , 'przycisk' as class
 , 'szukaj_stworzenia.sql?id='||id||'' as action
-, 'Wyczyść' as reset
 from help_list
 where nazwa='Gra'
 and wartosc=:Kolumna;
