@@ -1,6 +1,14 @@
 select 'dynamic' as component
 , sqlpage.run_sql('shell.sql') AS properties;
 
+-- Add return button
+ Select 'button' as component
+    ,'sm' as size
+   ;
+select 
+    'stworzenia.sql' as link,
+    'Powrót'  as title;
+
 -- Add title to page
 select 'title' as component
 , wartosc as contents
