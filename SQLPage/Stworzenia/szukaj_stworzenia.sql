@@ -39,7 +39,8 @@ with imie as (
         'value', s.imie,
         'selected', imie = :imie )) as options
     , 2 as width
-    from stworzenia_nnk s
+    from (
+        select gra_id, imie from stworzenia_nnk order by imie) s
     where case when $id::BIGINT = 1 then s.gra_id = 1
         when $id::BIGINT = 2 then s.gra_id = 2
         when $id::BIGINT = 3 then s.gra_id in (1,2)
@@ -57,7 +58,9 @@ with imie as (
         'selected', nazwa = :nazwa
     )) as OPTIONS
     , 2 as width
-    from stworzenia
+        from (
+        select nazwa from stworzenia order by nazwa
+        ) nazwa
 )
 -- Genus is selected
 with lista_gatunkow as (
@@ -91,7 +94,8 @@ with lista_gatunkow as (
     (select r.nazwa
     from gatunek g
     join recepta r on r.id = g.przysmak_id
-    group by r.nazwa) x
+    group by r.nazwa
+    order by r.nazwa) x
 )
 -- Trick is selected
 , triki AS (
