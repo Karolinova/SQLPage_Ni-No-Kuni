@@ -138,12 +138,14 @@ select 'html' as component
 from uprawnienia u;
 
 -- Add filter result
-select 'table' as component;
+select 'table' as component
+, 'Akcje'  as markdown;
 
 select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 3", "Trik 4", "Trik 5", "Trik 6"
+    , '[Usuń](Akcje/usun_stworzenie.sql?id='||id||') [Edytuj](Akcje/edytuj_stworzenie.sql?id=' || id || ')' as akcje
       from (
          select 1 as gra --Ni no Kuni: Wrath of the White Witch
-         , stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec 
+         , stw.id, stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec 
          , t1.nazwa as "Trik 1", t2.nazwa as "Trik 2", t3.nazwa as "Trik 3"
          , t4.nazwa as "Trik 4", t5.nazwa as "Trik 5", t6.nazwa as "Trik 6"
          from stworzenia s 
@@ -159,7 +161,7 @@ select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 
          where stw.gra_id = 1
          union all
          select 2 as gra -- Ni no Kuni II: Revenant Kingdom
-         , stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec 
+         , stw.id, stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec 
          , t1.nazwa as "Trik 1", t2.nazwa as "Trik 2", t3.nazwa as "Trik 3"
          , t4.nazwa as "Trik 4", t5.nazwa as "Trik 5", t6.nazwa as "Trik 6"
          from stworzenia s 
@@ -175,12 +177,12 @@ select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 
          where stw.gra_id = 2
          union all
          select 3 as gra -- Ni No Kuni I/Ni no Kuni II
-         , nnk1_nnk2.imie, nnk1_nnk2.nazwa, nnk1_nnk2.gatunek, nnk1_nnk2.nazwa_rec
+         , nnk1_nnk2.id, nnk1_nnk2.imie, nnk1_nnk2.nazwa, nnk1_nnk2.gatunek, nnk1_nnk2.nazwa_rec
          , nnk1_nnk2."Trik 1", nnk1_nnk2."Trik 2", nnk1_nnk2."Trik 3"
          , nnk1_nnk2."Trik 4", nnk1_nnk2."Trik 5", nnk1_nnk2."Trik 6"
          from
          (select 1 as gra -- Ni no Kuni: Wrath of the White Witch
-         , stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec 
+         , stw.id, stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec 
          , t1.nazwa as "Trik 1", t2.nazwa as "Trik 2", t3.nazwa as "Trik 3"
          , t4.nazwa as "Trik 4", t5.nazwa as "Trik 5", t6.nazwa as "Trik 6"
          from stworzenia s 
@@ -196,7 +198,7 @@ select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 
          where stw.gra_id = 1
          union all
          select 2 as gra
-         , stw.imie, s.nazwa, g.nazwa, r.nazwa as nazwa_rec 
+         , stw.id, stw.imie, s.nazwa, g.nazwa, r.nazwa as nazwa_rec 
          , t1.nazwa as "Trik 1", t2.nazwa as "Trik 2", t3.nazwa as "Trik 3"
          , t4.nazwa as "Trik 4", t5.nazwa as "Trik 5", t6.nazwa as "Trik 6"
          from stworzenia s 
