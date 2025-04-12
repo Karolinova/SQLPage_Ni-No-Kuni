@@ -33,7 +33,8 @@ with imie as (
     'label', s.imie,
     'value', s.imie )) as options
     , 2 as width
-    from stworzenia_nnk s
+    from (
+        select gra_id, imie from stworzenia_nnk order by imie) s
     join help_list hl on hl.id=s.gra_id
     -- list of names depends on the game
     where nazwa = 'Gra'
@@ -66,7 +67,9 @@ with imie as (
         'label', nazwa,
         'value', nazwa )) as OPTIONS
     , 2 as width
-    from stworzenia
+    from (
+        select nazwa from stworzenia order by nazwa
+        ) nazwa
 )
 -- select treat
 , przysmak AS (
@@ -83,7 +86,8 @@ with imie as (
     (select r.nazwa
     from gatunek g
     join recepta r on r.id = g.przysmak_id
-    group by r.nazwa) x
+    group by r.nazwa
+    order by r.nazwa) x
 )
 -- select tricks
 , triki AS (
