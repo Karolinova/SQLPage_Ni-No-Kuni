@@ -116,6 +116,19 @@ union all
 select * from triki
 ;
 
+with uprawnienia AS (
+    select case when READ_ONLY is true then 'WIDOK'
+        when read_only is false then 'EDYCJA' end as widok_edycja
+        from users
+        where id = (select user_id from user_log
+                    where token=sqlpage.cookie('session_token'))
+)
+select 'html' as component
+, case when u.widok_edycja = 'EDYCJA' then NULL
+    when u.widok_edycja <> 'EDYCJA' then
+        '<h5 style="color: red">Nie możesz usuwać ani edytować danych</h5>' end as html
+from uprawnienia u;
+
 -- Add filter result of the selected game
 select 'table' as component
 , 'Akcje'  as markdown;
