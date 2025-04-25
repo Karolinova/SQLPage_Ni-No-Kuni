@@ -84,7 +84,7 @@ with imie as (
         'value', x.nazwa
     )) as OPTIONS
     , 2 as width
-    from gatunek g
+    from
     (select r.nazwa
     from gatunek g
     join recepta r on r.id = g.przysmak_id
@@ -109,7 +109,7 @@ with imie as (
 )
 select * from imie
 union all
-select * from nazwa;
+select * from nazwa
 union all
 select * from lista_gatunkow
 union all
