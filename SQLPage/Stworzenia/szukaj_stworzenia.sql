@@ -66,7 +66,7 @@ with imie as (
         ) nazwa
 )
 -- Genus is selected
-with lista_gatunkow as (
+, lista_gatunkow as (
     select 'select' as type
     ,'gatunek' as name
     ,'Gatunek' as label
