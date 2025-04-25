@@ -10,8 +10,10 @@ select
 
 -- Add title page
 select 'title' as component
-   , :Kolumna as contents
-   , true as center;
+   , wartosc as contents
+   , true as center
+   from help_list
+   where id = $id::BIGINT;
 
 -- Add filtration to table
 select 'form' as component
@@ -21,7 +23,7 @@ select 'form' as component
 , 'szukaj_stworzenia.sql?id='||id||'' as action
 from help_list
 where nazwa='Gra'
-and wartosc=:Kolumna;
+and id = $id::BIGINT;
 
 -- select name
 with imie as (
@@ -38,9 +40,9 @@ with imie as (
     join help_list hl on hl.id=s.gra_id
     -- list of names depends on the game
     where nazwa = 'Gra'
-        and case when :Kolumna = 'Ni no Kuni: Wrath of the White Witch' then s.gra_id = 1
-        when :Kolumna = 'Ni no Kuni II: Revenant Kingdom' then s.gra_id = 2
-        when :Kolumna = 'Ni No Kuni I/Ni no Kuni II' then s.gra_id in (1,2)
+        and case when $id::bigint = 1 then s.gra_id = 1
+        when $id::bigint = 2 then s.gra_id = 2
+        when $id::bigint = 3 then s.gra_id in (1,2)
         end
 )
 -- select genus
@@ -136,7 +138,7 @@ select 'table' as component
 select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 3", "Trik 4", "Trik 5", "Trik 6"
     , '[Usuń](Akcje/usun_stworzenie.sql?id='||id||') [Edytuj](Akcje/edytuj_stworzenie.sql?id=' || id || ')' as akcje
       from (
-         select 'Ni no Kuni: Wrath of the White Witch' as gra
+         select stw.gra_id as gra
          , stw.id, stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec
          , t1.nazwa as "Trik 1", t2.nazwa as "Trik 2", t3.nazwa as "Trik 3"
          , t4.nazwa as "Trik 4", t5.nazwa as "Trik 5", t6.nazwa as "Trik 6"
@@ -150,59 +152,7 @@ select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 
          left join triki_zaklecia t6 on t6.id = s.trik6_id
          join gatunek g on g.g_id = s.gatunek_id
          join recepta r on r.id = g.przysmak_id
-         where stw.gra_id = 1
-         union all
-         select 'Ni no Kuni II: Revenant Kingdom' as gra
-         , stw.id, stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec
-         , t1.nazwa as "Trik 1", t2.nazwa as "Trik 2", t3.nazwa as "Trik 3"
-         , t4.nazwa as "Trik 4", t5.nazwa as "Trik 5", t6.nazwa as "Trik 6"
-         from stworzenia s 
-         join stworzenia_nnk stw on stw.stw_id = s.id
-         join triki_zaklecia t1 on t1.id = s.trik1_id
-         join triki_zaklecia t2 on t2.id = s.trik2_id
-         left join triki_zaklecia t3 on t3.id = s.trik3_id
-         left join triki_zaklecia t4 on t4.id = s.trik4_id
-         left join triki_zaklecia t5 on t5.id = s.trik5_id
-         left join triki_zaklecia t6 on t6.id = s.trik6_id
-         join gatunek g on g.g_id = s.gatunek_id
-         join recepta r on r.id = g.przysmak_id
-         where stw.gra_id = 2
-         union all
-         select 'Ni No Kuni I/Ni no Kuni II' as gra
-         , nnk1_nnk2.id, nnk1_nnk2.imie, nnk1_nnk2.nazwa, nnk1_nnk2.gatunek, nnk1_nnk2.nazwa_rec
-         , nnk1_nnk2."Trik 1", nnk1_nnk2."Trik 2", nnk1_nnk2."Trik 3"
-         , nnk1_nnk2."Trik 4", nnk1_nnk2."Trik 5", nnk1_nnk2."Trik 6"
-         from
-         (select 'Ni no Kuni: Wrath of the White Witch' as gra
-         , stw.id, stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec
-         , t1.nazwa as "Trik 1", t2.nazwa as "Trik 2", t3.nazwa as "Trik 3"
-         , t4.nazwa as "Trik 4", t5.nazwa as "Trik 5", t6.nazwa as "Trik 6"
-         from stworzenia s 
-         join stworzenia_nnk stw on stw.stw_id = s.id
-         join triki_zaklecia t1 on t1.id = s.trik1_id
-         join triki_zaklecia t2 on t2.id = s.trik2_id
-         left join triki_zaklecia t3 on t3.id = s.trik3_id
-         left join triki_zaklecia t4 on t4.id = s.trik4_id
-         left join triki_zaklecia t5 on t5.id = s.trik5_id
-         left join triki_zaklecia t6 on t6.id = s.trik6_id
-         join gatunek g on g.g_id = s.gatunek_id
-         join recepta r on r.id = g.przysmak_id
-         where stw.gra_id = 1
-         union all
-         select 'Ni no Kuni II: Revenant Kingdom' as gra
-         , stw.id, stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec
-         , t1.nazwa as "Trik 1", t2.nazwa as "Trik 2", t3.nazwa as "Trik 3"
-         , t4.nazwa as "Trik 4", t5.nazwa as "Trik 5", t6.nazwa as "Trik 6"
-         from stworzenia s 
-         join stworzenia_nnk stw on stw.stw_id = s.id
-         join triki_zaklecia t1 on t1.id = s.trik1_id
-         join triki_zaklecia t2 on t2.id = s.trik2_id
-         left join triki_zaklecia t3 on t3.id = s.trik3_id
-         left join triki_zaklecia t4 on t4.id = s.trik4_id
-         left join triki_zaklecia t5 on t5.id = s.trik5_id
-         left join triki_zaklecia t6 on t6.id = s.trik6_id
-         join gatunek g on g.g_id = s.gatunek_id
-         join recepta r on r.id = g.przysmak_id
-         where stw.gra_id = 2) nnk1_nnk2
       ) as dane
-where gra = :Kolumna;
+where case when $id::bigint = 1 then gra = 1 
+    when $id::bigint = 2 then gra = 2
+    when $id::bigint = 3 then gra in (1,2) end;
