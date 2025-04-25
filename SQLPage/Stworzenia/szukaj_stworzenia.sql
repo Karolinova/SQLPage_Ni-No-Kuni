@@ -6,8 +6,11 @@ select 'dynamic' as component
     ,'sm' as size
    ;
 select 
-    'stworzenia.sql' as link,
-    'Powrót'  as title;
+    'st_wybor_gry.sql?id='||id||'' as link,
+    'Powrót'  as title
+    from help_list
+    where nazwa='Gra'
+    and id = $id::BIGINT;
 
 -- Add title to page
 select 'title' as component
@@ -144,7 +147,7 @@ select 'table' as component
 select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 3", "Trik 4", "Trik 5", "Trik 6"
     , '[Usuń](Akcje/usun_stworzenie.sql?id='||id||') [Edytuj](Akcje/edytuj_stworzenie.sql?id=' || id || ')' as akcje
       from (
-         select 1 as gra --Ni no Kuni: Wrath of the White Witch
+         select stw.gra_id as gra --Ni no Kuni: Wrath of the White Witch
          , stw.id, stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec 
          , t1.nazwa as "Trik 1", t2.nazwa as "Trik 2", t3.nazwa as "Trik 3"
          , t4.nazwa as "Trik 4", t5.nazwa as "Trik 5", t6.nazwa as "Trik 6"
@@ -158,63 +161,10 @@ select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 
          left join triki_zaklecia t6 on t6.id = s.trik6_id
          join gatunek g on g.g_id = s.gatunek_id 
          join recepta r on r.id = g.przysmak_id 
-         where stw.gra_id = 1
-         union all
-         select 2 as gra -- Ni no Kuni II: Revenant Kingdom
-         , stw.id, stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec 
-         , t1.nazwa as "Trik 1", t2.nazwa as "Trik 2", t3.nazwa as "Trik 3"
-         , t4.nazwa as "Trik 4", t5.nazwa as "Trik 5", t6.nazwa as "Trik 6"
-         from stworzenia s 
-         join stworzenia_nnk stw on s2.stw_id = s.id
-         join triki_zaklecia t1 on t1.id = s.trik1_id
-         join triki_zaklecia t2 on t2.id = s.trik2_id
-         left join triki_zaklecia t3 on t3.id = s.trik3_id
-         left join triki_zaklecia t4 on t4.id = s.trik4_id
-         left join triki_zaklecia t5 on t5.id = s.trik5_id
-         left join triki_zaklecia t6 on t6.id = s.trik6_id
-         join gatunek g on g.g_id = s.gatunek_id 
-         join recepta r on r.id = g.przysmak_id 
-         where stw.gra_id = 2
-         union all
-         select 3 as gra -- Ni No Kuni I/Ni no Kuni II
-         , nnk1_nnk2.id, nnk1_nnk2.imie, nnk1_nnk2.nazwa, nnk1_nnk2.gatunek, nnk1_nnk2.nazwa_rec
-         , nnk1_nnk2."Trik 1", nnk1_nnk2."Trik 2", nnk1_nnk2."Trik 3"
-         , nnk1_nnk2."Trik 4", nnk1_nnk2."Trik 5", nnk1_nnk2."Trik 6"
-         from
-         (select 1 as gra -- Ni no Kuni: Wrath of the White Witch
-         , stw.id, stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec 
-         , t1.nazwa as "Trik 1", t2.nazwa as "Trik 2", t3.nazwa as "Trik 3"
-         , t4.nazwa as "Trik 4", t5.nazwa as "Trik 5", t6.nazwa as "Trik 6"
-         from stworzenia s 
-         join stworzenia_nnk stw on stw.stw_id = s.id
-         join triki_zaklecia t1 on t1.id = s.trik1_id
-         join triki_zaklecia t2 on t2.id = s.trik2_id
-         left join triki_zaklecia t3 on t3.id = s.trik3_id
-         left join triki_zaklecia t4 on t4.id = s.trik4_id
-         left join triki_zaklecia t5 on t5.id = s.trik5_id
-         left join triki_zaklecia t6 on t6.id = s.trik6_id
-         join gatunek g on g.g_id = s.gatunek_id 
-         join recepta r on r.id = g.przysmak_id 
-         where stw.gra_id = 1
-         union all
-         select 2 as gra
-         , stw.id, stw.imie, s.nazwa, g.nazwa, r.nazwa as nazwa_rec 
-         , t1.nazwa as "Trik 1", t2.nazwa as "Trik 2", t3.nazwa as "Trik 3"
-         , t4.nazwa as "Trik 4", t5.nazwa as "Trik 5", t6.nazwa as "Trik 6"
-         from stworzenia s 
-         join stworzenia_nnk stw on stw.stw_id = s.id
-         join triki_zaklecia t1 on t1.id = s.trik1_id
-         join triki_zaklecia t2 on t2.id = s.trik2_id
-         left join triki_zaklecia t3 on t3.id = s.trik3_id
-         left join triki_zaklecia t4 on t4.id = s.trik4_id
-         left join triki_zaklecia t5 on t5.id = s.trik5_id
-         left join triki_zaklecia t6 on t6.id = s.trik6_id
-         join gatunek g on g.g_id = s.gatunek_id 
-         join recepta r on r.id = g.przysmak_id 
-         where stw.gra_id = 2
-         ) nnk1_nnk2
       ) as dane
-where gra = $id
+where case when $id::bigint = 1 then gra = 1 
+    when $id::bigint = 2 then gra = 2
+    when $id::bigint = 3 then gra in (1,2) end
 and case when :imie <>'Wybierz imię' then imie = :imie
     else imie <>'Wybierz imię'
     end
