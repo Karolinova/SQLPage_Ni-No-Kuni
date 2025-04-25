@@ -22,7 +22,7 @@ select 'form' as component
 , 'Wybór gry' as title
 , 'Wybierz' as validate
 , 'przycisk' as class
-, 'st_wybor_gry.sql' as action;
+, 'redirect_page.sql' as action;
 
 with lista_gier as (
     select 'select' as type
