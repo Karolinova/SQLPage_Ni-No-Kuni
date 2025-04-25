@@ -31,7 +31,7 @@ with lista_gier as (
     , jsonb_agg(json_build_object(
         'label', wartosc,
         'value', wartosc,
-        'selected', 'selected', wartosc = $selected 
+        'selected', wartosc = $selected 
     ))::text as OPTIONS
     -- , 4 as width
     from help_list where nazwa='Gra'
