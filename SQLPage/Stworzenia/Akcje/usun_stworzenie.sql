@@ -6,6 +6,6 @@ with uprawnienia AS (
                     where token=sqlpage.cookie('session_token'))
 )
 select 'redirect' as component
-, case when widok_edycja = 'EDYCJA' then 'del_stw.sql'
-    when widok_edycja <> 'EDYCJA' then '/Stworzenia/stworzenia.sql' end as LINK
+, case when widok_edycja = 'EDYCJA' then 'del_stw.sql?gra='||$gra||'&stw_id='||$id||''
+    when widok_edycja <> 'EDYCJA' then '/Stworzenia/st_wybor_gry.sql?id='||$gra||'' end as LINK
     from uprawnienia;
