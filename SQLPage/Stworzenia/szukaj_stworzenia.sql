@@ -137,7 +137,7 @@ with uprawnienia AS (
 select 'html' as component
 , case when u.widok_edycja = 'EDYCJA' then NULL
     when u.widok_edycja <> 'EDYCJA' then
-        '<h5 style="color: red">Nie możesz usuwać ani edytować danych</h5>' end as html
+        '<h5 style="color: green">Nie możesz usuwać ani edytować danych</h5>' end as html
 from uprawnienia u;
 
 -- Add filter result
@@ -145,10 +145,11 @@ select 'table' as component
 , 'Akcje'  as markdown;
 
 select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 3", "Trik 4", "Trik 5", "Trik 6"
-    , '[Usuń](Akcje/usun_stworzenie.sql?id='||id||') [Edytuj](Akcje/edytuj_stworzenie.sql?id=' || id || ')' as akcje
+    ,  '[Usuń](Akcje/usun_stworzenie.sql?gra='||$id||'&id='||stw_id||') 
+    [Edytuj](Akcje/edytuj_stworzenie.sql?gra='||$id||'&id='||stw_id||')' as akcje
       from (
          select stw.gra_id as gra --Ni no Kuni: Wrath of the White Witch
-         , stw.id, stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec 
+         , stw.id as stw_id, stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec 
          , t1.nazwa as "Trik 1", t2.nazwa as "Trik 2", t3.nazwa as "Trik 3"
          , t4.nazwa as "Trik 4", t5.nazwa as "Trik 5", t6.nazwa as "Trik 6"
          from stworzenia s 
