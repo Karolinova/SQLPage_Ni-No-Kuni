@@ -132,6 +132,24 @@ select 'html' as component
         '<h5 style="color: green">Nie możesz usuwać ani edytować danych</h5>' end as html
 from uprawnienia u;
 
+-- Add button to 'add familiar'
+select 'button' as component
+, 'start' as justify;
+
+with uprawnienia AS (
+    select case when READ_ONLY is true then 'WIDOK'
+        when read_only is false then 'EDYCJA' end as widok_edycja
+        from users
+        where id = (select user_id from user_log
+                    where token=sqlpage.cookie('session_token'))
+)
+select 'Dodaj nowe stworzenie' as title
+, 'Dodaj' as validate
+, 'Akcje/dodaj_stworzenie.sql?gra='||$id||'' as link
+, 'cyan' as color
+from uprawnienia
+where widok_edycja = 'EDYCJA';
+
 -- Add filter result of the selected game
 select 'table' as component
 , 'Akcje'  as markdown;
