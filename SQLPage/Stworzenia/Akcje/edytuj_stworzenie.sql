@@ -28,10 +28,11 @@ from uprawnienia u;
 -- Add form to edit data
 select 'form' as component
 , 'Zmień dane stworzenia' as title
-, 'update_stw.sql?gra='||$gra||'&stw_id='||$id||'' as action;
+, 'update_stw.sql?gra='||$gra||'&stw_id='||$id||'' as action
+, 'Edytuj' as validate;
 
 -- Name
-select 'Imie' as label
+select 'Imię' as label
 , true as required
 , imie as value
 , 'imie' as name
