@@ -176,9 +176,11 @@ where widok_edycja = 'EDYCJA';
 
 -- Add filter result
 select 'table' as component
-, 'Akcje'  as markdown;
+, 'Akcje'  as markdown
+, 'Złoty' as icon;
 
 select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 3", "Trik 4", "Trik 5", "Trik 6"
+    , case when gold = true then 'check' else null end as "Złoty"
     ,  '[Usuń](Akcje/usun_stworzenie.sql?gra='||$id||'&id='||stw_id||') 
     [Edytuj](Akcje/edytuj_stworzenie.sql?gra='||$id||'&id='||stw_id||')' as akcje
       from (
