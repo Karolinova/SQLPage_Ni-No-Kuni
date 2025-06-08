@@ -117,6 +117,20 @@ with imie as (
         ) triki_zaklecia
     where stworzenie_postac = 'S'
 )
+, zloty AS (
+        select 'select' as type
+    , 'gold' as name
+    , 'Złoty' as label
+    , 'pytanie' as class
+    , '[{"label": "Wybierz", "value": "Wybierz"}]'::jsonb || jsonb_agg(json_build_object(
+        'label', case when gold = true then 'TAK' else 'NIE' end,
+        'value', gold
+    )) as OPTIONS
+    , 2 as width
+    from (
+        select distinct gold from stworzenia
+        ) zloty
+)
 select * from imie
 union all
 select * from nazwa
@@ -125,7 +139,9 @@ select * from lista_gatunkow
 union all
 select * from przysmak
 union all
-select * from triki;
+select * from triki
+union all
+select * from zloty;
 
 with uprawnienia AS (
     select case when READ_ONLY is true then 'WIDOK'
@@ -198,5 +214,8 @@ and case when :przysmak <>'Wybierz przysmak' then nazwa_rec = :przysmak
     end
 and case when :triki<>'Wybierz trik' then "Trik 1"=:triki or "Trik 2"=:triki or "Trik 3"=:triki or "Trik 4"=:triki or "Trik 5"=:triki or "Trik 6"=:triki
     else "Trik 1"<>'Wybierz trik' or "Trik 2"<>'Wybierz trik' or "Trik 3"<>'Wybierz trik' or "Trik 3"<>'Wybierz trik' or "Trik 4"<>'Wybierz trik' or "Trik 5"<>'Wybierz trik' or "Trik 6"<>'Wybierz trik'
+    end
+and case when :gold <>'Wybierz' then gold = :gold::BOOLEAN
+    else gold in (true,false)
     end
  ;
