@@ -108,6 +108,21 @@ with imie as (
         ) triki_zaklecia
     where stworzenie_postac = 'S'
 )
+-- select gold
+, zloty AS (
+        select 'select' as type
+    , 'gold' as name
+    , 'Złoty' as label
+    , 'pytanie' as class
+    , '[{"label": "Wybierz", "value": "Wybierz"}]'::jsonb || jsonb_agg(json_build_object(
+        'label', case when gold = true then 'TAK' else 'NIE' end,
+        'value', gold
+    )) as OPTIONS
+    , 2 as width
+    from (
+        select distinct gold from stworzenia
+        ) zloty
+)
 select * from imie
 union all
 select * from nazwa
@@ -117,6 +132,8 @@ union all
 select * from przysmak
 union all
 select * from triki
+union all
+select * from zloty
 ;
 
 with uprawnienia AS (
