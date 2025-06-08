@@ -15,5 +15,6 @@ create table stworzenia (id bigserial primary key
 , constraint FK_triki_zaklecia6 foreign key(trik6_id) references triki_zaklecia (id)
 , gatunek_id int
 , constraint FK_gatunek foreign key(gatunek_id) references gatunek (g_id)
+, gold boolean
 );
 
