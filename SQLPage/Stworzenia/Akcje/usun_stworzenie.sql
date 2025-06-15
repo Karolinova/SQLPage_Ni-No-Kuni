@@ -7,5 +7,5 @@ with uprawnienia AS (
 )
 select 'redirect' as component
 , case when widok_edycja = 'EDYCJA' then 'del_stw.sql?gra='||$gra||'&stw_id='||$id||''
-    when widok_edycja <> 'EDYCJA' then '/Stworzenia/st_wybor_gry.sql?id='||$gra||'' end as LINK
+    when widok_edycja <> 'EDYCJA' then '/Stworzenia/st_wybor_gry.sql?id='||$gra||'&offset=0&page=10' end as LINK
     from uprawnienia;
