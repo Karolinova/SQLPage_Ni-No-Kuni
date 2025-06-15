@@ -5,7 +5,7 @@ select 'dynamic' as component
  Select 'button' as component
     ,'sm' as size;
 select 
-    '/Stworzenia/st_wybor_gry.sql?id='||id||'' as link,
+    '/Stworzenia/st_wybor_gry.sql?id='||id||'&offset=0&page=10' as link,
     'Powrót'  as title
     from help_list
     where nazwa='Gra'
