@@ -188,6 +188,7 @@ select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 
          , stw.id as stw_id, stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec 
          , t1.nazwa as "Trik 1", t2.nazwa as "Trik 2", t3.nazwa as "Trik 3"
          , t4.nazwa as "Trik 4", t5.nazwa as "Trik 5", t6.nazwa as "Trik 6"
+         , s.gold
          from stworzenia s 
          join stworzenia_nnk stw on stw.stw_id = s.id
          join triki_zaklecia t1 on t1.id = s.trik1_id
