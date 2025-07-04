@@ -25,7 +25,7 @@ select 'form' as component
 , 'Szukaj stworzenia' as title
 , 'Szukaj' as validate
 , 'przycisk' as class
-, 'szukaj_stworzenia.sql?id='||id||'' as action
+, 'szukaj_stworzenia.sql?id='||id||'&offset=0&page=10' as action
 from help_list hl
 where hl.nazwa='Gra'
 and id = $id::BIGINT
@@ -40,7 +40,7 @@ with imie as (
     ,  '[{"label": "Wybierz imię", "value": "Wybierz imię"}]'::jsonb || jsonb_agg(json_build_object(
         'label', s.imie,
         'value', s.imie,
-        'selected', imie = :imie )) as options
+        'selected', imie = $imie )) as options
     , 2 as width
     from (
         select gra_id, imie from stworzenia_nnk order by imie) s
@@ -58,7 +58,7 @@ with imie as (
     , '[{"label": "Wybierz nazwę", "value": "Wybierz nazwę"}]'::jsonb || jsonb_agg(json_build_object(
         'label', nazwa,
         'value', nazwa,
-        'selected', nazwa = :nazwa
+        'selected', nazwa = $nazwa
     )) as OPTIONS
     , 2 as width
         from (
@@ -74,7 +74,7 @@ with imie as (
     , '[{"label": "Wybierz gatunek", "value": "Wybierz gatunek"}]'::jsonb || jsonb_agg(json_build_object(
         'label', nazwa,
         'value', nazwa,
-        'selected', nazwa = :gatunek
+        'selected', nazwa = $gatunek
     )) as OPTIONS
     , 2 as width
        from (
@@ -90,7 +90,7 @@ with imie as (
     , '[{"label": "Wybierz przysmak", "value": "Wybierz przysmak"}]'::jsonb || jsonb_agg(json_build_object(
         'label', nazwa,
         'value', nazwa,
-        'selected', nazwa = :przysmak
+        'selected', nazwa = $przysmak
     )) as OPTIONS
     , 2 as width
     from 
@@ -109,7 +109,7 @@ with imie as (
     , '[{"label": "Wybierz trik", "value": "Wybierz trik"}]'::jsonb ||  jsonb_agg(json_build_object(
         'label', nazwa,
         'value', nazwa,
-        'selected', nazwa = :triki
+        'selected', nazwa = $triki
     )) as OPTIONS
     , 2 as width
     from (
@@ -125,7 +125,7 @@ with imie as (
     , '[{"label": "Wybierz", "value": "Wybierz"}]'::jsonb || jsonb_agg(json_build_object(
         'label', case when gold = true then 'TAK' else 'NIE' end,
         'value', gold,
-        'selected', gold::text = :gold
+        'selected', gold::text = $gold
     )) as OPTIONS
     , 2 as width
     from (
@@ -204,22 +204,22 @@ select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 
 where case when $id::bigint = 1 then gra = 1 
     when $id::bigint = 2 then gra = 2
     when $id::bigint = 3 then gra in (1,2) end
-and case when :imie <>'Wybierz imię' then imie = :imie
+and case when $imie <>'Wybierz imię' then imie = $imie
     else imie <>'Wybierz imię'
     end
-and case when :nazwa <>'Wybierz nazwę' then nazwa = :nazwa
+and case when $nazwa <>'Wybierz nazwę' then nazwa = $nazwa
     else nazwa <>'Wybierz nazwę'
     end
-and case when :gatunek <>'Wybierz gatunek' then gatunek = :gatunek
+and case when $gatunek <>'Wybierz gatunek' then gatunek = $gatunek
     else gatunek <>'Wybierz gatunek'
     end
-and case when :przysmak <>'Wybierz przysmak' then nazwa_rec = :przysmak
+and case when $przysmak <>'Wybierz przysmak' then nazwa_rec = $przysmak
     else nazwa_rec <>'Wybierz przysmak'
     end
-and case when :triki<>'Wybierz trik' then "Trik 1"=:triki or "Trik 2"=:triki or "Trik 3"=:triki or "Trik 4"=:triki or "Trik 5"=:triki or "Trik 6"=:triki
+and case when $triki<>'Wybierz trik' then "Trik 1"=$triki or "Trik 2"=$triki or "Trik 3"=$triki or "Trik 4"=$triki or "Trik 5"=$triki or "Trik 6"=$triki
     else "Trik 1"<>'Wybierz trik' or "Trik 2"<>'Wybierz trik' or "Trik 3"<>'Wybierz trik' or "Trik 3"<>'Wybierz trik' or "Trik 4"<>'Wybierz trik' or "Trik 5"<>'Wybierz trik' or "Trik 6"<>'Wybierz trik'
     end
-and case when :gold <>'Wybierz' then gold = :gold::BOOLEAN
+and case when $gold <>'Wybierz' then gold = $gold::BOOLEAN
     else gold in (true,false)
     end
 and id >= COALESCE($start_id::integer,0)
