@@ -189,7 +189,7 @@ select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 
          , stw.id as stw_id, stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec 
          , t1.nazwa as "Trik 1", t2.nazwa as "Trik 2", t3.nazwa as "Trik 3"
          , t4.nazwa as "Trik 4", t5.nazwa as "Trik 5", t6.nazwa as "Trik 6"
-         , s.gold
+         , s.gold, s.id
          from stworzenia s 
          join stworzenia_nnk stw on stw.stw_id = s.id
          join triki_zaklecia t1 on t1.id = s.trik1_id
@@ -222,4 +222,23 @@ and case when :triki<>'Wybierz trik' then "Trik 1"=:triki or "Trik 2"=:triki or 
 and case when :gold <>'Wybierz' then gold = :gold::BOOLEAN
     else gold in (true,false)
     end
+and id >= COALESCE($start_id::integer,0)
+limit COALESCE($page::integer,0) 
+offset COALESCE($offset::integer,0)
  ;
+
+-- Pagination
+select 'button' as component
+, true as center;
+
+select '|<' as title
+, '?id='||$id||'&imie='||$imie||'&nazwa='||$nazwa||'&gatunek='||$gatunek||'&przysmak='||$przysmak||'&triki='||$triki||'&gold='||$gold||'&offset=0&page='||COALESCE($page::integer,10) as link
+, $offset::integer <= 0 as disabled;
+
+select '<<' as title
+, '?id='||$id||'&imie='||$imie||'&nazwa='||$nazwa||'&gatunek='||$gatunek||'&przysmak='||$przysmak||'&triki='||$triki||'&gold='||$gold||'&offset='||(COALESCE($offset::integer,0) - COALESCE($page::integer,5))||'&page='||COALESCE($page::integer,5) as LINK
+, $offset::integer <= 0 as disabled;
+
+select '>>' as title
+, '?id='||$id||'&imie='||$imie||'&nazwa='||$nazwa||'&gatunek='||$gatunek||'&przysmak='||$przysmak||'&triki='||$triki||'&&gold='||$gold||'&offset='||(COALESCE($offset::integer,0)+COALESCE($page::integer,5))||'&page='||COALESCE($page::integer,5) as link
+;
