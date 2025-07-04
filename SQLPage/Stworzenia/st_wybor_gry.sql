@@ -21,7 +21,7 @@ select 'form' as component
 , 'Szukaj' as validate
 , 'przycisk' as class
 , 'Wyczyść' as reset
-, 'szukaj_stworzenia.sql?id='||id||'' as action
+, 'szukaj_stworzenia.sql?id='||id||'&offset=0&page=10' as action
 from help_list
 where nazwa='Gra'
 and id = $id::BIGINT;
