@@ -124,7 +124,8 @@ with imie as (
     , 'pytanie' as class
     , '[{"label": "Wybierz", "value": "Wybierz"}]'::jsonb || jsonb_agg(json_build_object(
         'label', case when gold = true then 'TAK' else 'NIE' end,
-        'value', gold
+        'value', gold,
+        'selected', gold::text = :gold
     )) as OPTIONS
     , 2 as width
     from (
