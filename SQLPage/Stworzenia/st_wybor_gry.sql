@@ -181,7 +181,7 @@ select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 
          , stw.id as stw_id, stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec
          , t1.nazwa as "Trik 1", t2.nazwa as "Trik 2", t3.nazwa as "Trik 3"
          , t4.nazwa as "Trik 4", t5.nazwa as "Trik 5", t6.nazwa as "Trik 6"
-         , s.gold, s.id
+         , s.gold, s.id, stw.user_id
          from stworzenia s 
          join stworzenia_nnk stw on stw.stw_id = s.id
          join triki_zaklecia t1 on t1.id = s.trik1_id
@@ -196,6 +196,7 @@ select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 
 where case when $id::bigint = 1 then gra = 1 
     when $id::bigint = 2 then gra = 2
     when $id::bigint = 3 then gra in (1,2) end
+    and user_id = (select id from users where login = $login)
     and id >= COALESCE($start_id::integer,0)
     order by dane.id
     limit COALESCE($page::integer,0) 
@@ -206,12 +207,12 @@ select 'button' as component
 , true as center;
 
 select '|<' as title
-, '?id='||$id||'&offset=0&page='||COALESCE($page::integer,10) as link
+, '?login='||$login||'&id='||$id||'&offset=0&page='||COALESCE($page::integer,10) as link
 , $offset::integer <= 0 as disabled;
 
 select '<<' as title
-, '?id='||$id||'&offset='||(COALESCE($offset::integer,0) - COALESCE($page::integer,5))||'&page='||COALESCE($page::integer,5) as LINK
+, '?login='||$login||'&id='||$id||'&offset='||(COALESCE($offset::integer,0) - COALESCE($page::integer,5))||'&page='||COALESCE($page::integer,5) as LINK
 , $offset::integer <= 0 as disabled;
 
 select '>>' as title
-, '?id='||$id||'&offset='||(COALESCE($offset::integer,0)+COALESCE($page::integer,5))||'&page='||COALESCE($page::integer,5) as link;
+, '?login='||$login||'&id='||$id||'&offset='||(COALESCE($offset::integer,0)+COALESCE($page::integer,5))||'&page='||COALESCE($page::integer,5) as link;
