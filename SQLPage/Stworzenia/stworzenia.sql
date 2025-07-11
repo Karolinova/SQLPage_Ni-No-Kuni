@@ -22,7 +22,9 @@ select 'form' as component
 , 'Wybór gry' as title
 , 'Wybierz' as validate
 , 'przycisk' as class
-, 'redirect_page.sql' as action;
+, 'redirect_page.sql?login='||login||'' as action
+from users
+where login = :User;
 
 with lista_gier as (
     select 'select' as type
