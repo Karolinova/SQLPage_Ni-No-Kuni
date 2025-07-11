@@ -29,7 +29,7 @@ select 'datagrid' as component
 ;
 
 select 'Stworzenia' as description
-,'Stworzenia/stworzenia.sql' as link;
+,'Stworzenia/stworzenia_user.sql' as link;
 select 'Postacie' as description
 , '/' as link
 ;
