@@ -5,4 +5,6 @@ create table stworzenia_nnk (id bigserial primary key
 , constraint FK_stworzenia1 foreign key(stw_id) references stworzenia (id)
 , gra_id int
 , constraint FK_gra foreign key(gra_id) references help_list (id)
+, user_id int
+, constraint FK_user foreign key(user_id) references users(id)
 );
