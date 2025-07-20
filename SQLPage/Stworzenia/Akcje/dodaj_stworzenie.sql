@@ -6,10 +6,7 @@ select 'dynamic' as component
     ,'sm' as size;
 select 
     '/Stworzenia/st_wybor_gry.sql?login='||$login||'&gra='||gra||'&offset=0&page=10' as link,
-    'Powrót'  as title
-    from help_list
-    where nazwa='Gra'
-    and id = $gra::BIGINT;
+    'Powrót'  as title;
 
 -- Add form to add data
 select 'form' as component
