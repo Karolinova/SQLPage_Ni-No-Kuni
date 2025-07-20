@@ -5,7 +5,7 @@ select 'dynamic' as component
  Select 'button' as component
     ,'sm' as size;
 select 
-    '/Stworzenia/st_wybor_gry.sql?id='||id||'&offset=0&page=10' as link,
+    '/Stworzenia/st_wybor_gry.sql?login='||$login||'&id='||id||'&offset=0&page=10' as link,
     'Powrót'  as title
     from help_list
     where nazwa='Gra'
@@ -15,7 +15,7 @@ select
 select 'form' as component
 , 'Dodaj nowe stworzenie' as title
 , 'Dodaj' as validate
-, 'ins_stw.sql?gra='||$gra||'' as action 
+, 'ins_stw.sql?login='||$login||'&gra='||$gra||'' as action 
 , 'cyan' as validate_color
 ;
 
