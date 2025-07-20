@@ -13,9 +13,8 @@ select 'Strona_glowna.sql' as link,
 select 'title' as component
    , wartosc as contents
    , true as center
-    from help_list
-    where nazwa='Gra'
-    and id = $gra::BIGINT;
+   from lista_gier
+   where id = $gra::BIGINT;
 
 -- Add image on main page
 select 'html' as component
