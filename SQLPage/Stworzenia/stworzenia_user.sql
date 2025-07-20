@@ -5,7 +5,7 @@ select 'dynamic' as component
  Select 'button' as component
 ,'sm' as size
 ;
-select '../Strona_glowna.sql' as link,
+select '../Strona_glowna.sql?gra='||$gra||'' as link,
 'Powrót'  as title
 ;
 
@@ -21,7 +21,7 @@ select 'form' as component
 , 'Wybór użytkownika' as title
 , 'Wybierz' as validate
 , 'przycisk' as class
-, 'stworzenia.sql' as action;
+, 'stworzenia.sql?gra='||$gra||'' as action;
 
 
 with lista_uzytkownikow as (

@@ -7,4 +7,4 @@ from stworzenia
 where nazwa = :nazwa
 returning
     'redirect' as component,
-    '/Stworzenia/st_wybor_gry.sql?login='||$login||'&id=' ||$gra||'&offset=0&page=10' as link;
+    '/Stworzenia/st_wybor_gry.sql?login='||$login||'&gra='||$gra||'&offset=0&page=10' as link;

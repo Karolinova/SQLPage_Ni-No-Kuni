@@ -6,7 +6,7 @@ select 'dynamic' as component
     ,'sm' as size
    ;
 select 
-    'st_wybor_gry.sql?id='||id||'&offset=0&page=10' as link,
+    'st_wybor_gry.sql?login='||$login||'&gra='||$gra||'&offset=0&page=10' as link,
     'Powrót'  as title
     from help_list
     where nazwa='Gra'
@@ -25,7 +25,7 @@ select 'form' as component
 , 'Szukaj stworzenia' as title
 , 'Szukaj' as validate
 , 'przycisk' as class
-, 'szukaj_stworzenia.sql?id='||id||'&offset=0&page=10' as action
+, 'szukaj_stworzenia.sql?login='||$login||'&gra='||$gra||'&offset=0&page=10' as action
 from help_list hl
 where hl.nazwa='Gra'
 and id = $id::BIGINT
@@ -44,9 +44,9 @@ with imie as (
     , 2 as width
     from (
         select gra_id, imie from stworzenia_nnk order by imie) s
-    where case when $id::BIGINT = 1 then s.gra_id = 1
-        when $id::BIGINT = 2 then s.gra_id = 2
-        when $id::BIGINT = 3 then s.gra_id in (1,2)
+    where case when $gra::BIGINT = 1 then s.gra_id = 1
+        when $gra::BIGINT = 2 then s.gra_id = 2
+        when $gra::BIGINT = 3 then s.gra_id in (1,2)
         end
 )
 -- Name of genus is selected
@@ -170,7 +170,7 @@ with uprawnienia AS (
 )
 select 'Dodaj nowe stworzenie' as title
 , 'Dodaj' as validate
-, 'Akcje/dodaj_stworzenie.sql?gra='||$id||'' as link
+, 'Akcje/dodaj_stworzenie.sql?login='||$login||'&gra='||$gra||'' as link
 , 'cyan' as color
 from uprawnienia
 where widok_edycja = 'EDYCJA';
@@ -182,14 +182,15 @@ select 'table' as component
 
 select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 3", "Trik 4", "Trik 5", "Trik 6"
     , case when gold = true then 'check' else null end as "Złoty"
-    ,  '[Usuń](Akcje/usun_stworzenie.sql?gra='||$id||'&id='||stw_id||') 
-    [Edytuj](Akcje/edytuj_stworzenie.sql?gra='||$id||'&id='||stw_id||')' as akcje
+    ,  '[Usuń](Akcje/usun_stworzenie.sql?gra='||$gra||'&id='||stw_id||') 
+    [Edytuj](Akcje/edytuj_stworzenie.sql?gra='||$gra||'&id='||stw_id||')' as akcje
       from (
          select stw.gra_id as gra --Ni no Kuni: Wrath of the White Witch
          , stw.id as stw_id, stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec 
          , t1.nazwa as "Trik 1", t2.nazwa as "Trik 2", t3.nazwa as "Trik 3"
          , t4.nazwa as "Trik 4", t5.nazwa as "Trik 5", t6.nazwa as "Trik 6"
          , s.gold, s.id
+         , stw.user_id
          from stworzenia s 
          join stworzenia_nnk stw on stw.stw_id = s.id
          join triki_zaklecia t1 on t1.id = s.trik1_id
@@ -201,9 +202,9 @@ select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 
          join gatunek g on g.g_id = s.gatunek_id 
          join recepta r on r.id = g.przysmak_id 
       ) as dane
-where case when $id::bigint = 1 then gra = 1 
-    when $id::bigint = 2 then gra = 2
-    when $id::bigint = 3 then gra in (1,2) end
+where case when $gra::bigint = 1 then gra = 1 
+    when $gra::bigint = 2 then gra = 2
+    when $gra::bigint = 3 then gra in (1,2) end
 and case when $imie <>'Wybierz imię' then imie = $imie
     else imie <>'Wybierz imię'
     end
@@ -223,6 +224,7 @@ and case when $gold <>'Wybierz' then gold = $gold::BOOLEAN
     else gold in (true,false)
     end
 and id >= COALESCE($start_id::integer,0)
+and user_id = (select id from users where login = $login)
 limit COALESCE($page::integer,0) 
 offset COALESCE($offset::integer,0)
  ;
@@ -232,13 +234,13 @@ select 'button' as component
 , true as center;
 
 select '|<' as title
-, '?id='||$id||'&imie='||$imie||'&nazwa='||$nazwa||'&gatunek='||$gatunek||'&przysmak='||$przysmak||'&triki='||$triki||'&gold='||$gold||'&offset=0&page='||COALESCE($page::integer,10) as link
+, '?login='||$login||'&gra='||$gra||'&imie='||$imie||'&nazwa='||$nazwa||'&gatunek='||$gatunek||'&przysmak='||$przysmak||'&triki='||$triki||'&gold='||$gold||'&offset=0&page='||COALESCE($page::integer,10) as link
 , $offset::integer <= 0 as disabled;
 
 select '<<' as title
-, '?id='||$id||'&imie='||$imie||'&nazwa='||$nazwa||'&gatunek='||$gatunek||'&przysmak='||$przysmak||'&triki='||$triki||'&gold='||$gold||'&offset='||(COALESCE($offset::integer,0) - COALESCE($page::integer,5))||'&page='||COALESCE($page::integer,5) as LINK
+, '?login='||$login||'&gra='||$gra||'&imie='||$imie||'&nazwa='||$nazwa||'&gatunek='||$gatunek||'&przysmak='||$przysmak||'&triki='||$triki||'&gold='||$gold||'&offset='||(COALESCE($offset::integer,0) - COALESCE($page::integer,5))||'&page='||COALESCE($page::integer,5) as LINK
 , $offset::integer <= 0 as disabled;
 
 select '>>' as title
-, '?id='||$id||'&imie='||$imie||'&nazwa='||$nazwa||'&gatunek='||$gatunek||'&przysmak='||$przysmak||'&triki='||$triki||'&&gold='||$gold||'&offset='||(COALESCE($offset::integer,0)+COALESCE($page::integer,5))||'&page='||COALESCE($page::integer,5) as link
+, '?login='||$login||'&gra='||$gra||'&imie='||$imie||'&nazwa='||$nazwa||'&gatunek='||$gatunek||'&przysmak='||$przysmak||'&triki='||$triki||'&&gold='||$gold||'&offset='||(COALESCE($offset::integer,0)+COALESCE($page::integer,5))||'&page='||COALESCE($page::integer,5) as link
 ;

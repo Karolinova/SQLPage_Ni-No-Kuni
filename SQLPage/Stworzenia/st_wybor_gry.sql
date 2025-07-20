@@ -5,7 +5,7 @@ select 'dynamic' as component
  Select 'button' as component
     ,'sm' as size;
 select 
-    'stworzenia_user.sql' as link,
+    'stworzenia_user.sql?gra='||$gra||'' as link,
     'Powrót'  as title;
 
 -- Add title page
@@ -21,7 +21,7 @@ select 'form' as component
 , 'Szukaj' as validate
 , 'przycisk' as class
 , 'Wyczyść' as reset
-, 'szukaj_stworzenia.sql?login='||$login||'&id='||id||'&offset=0&page=10' as action
+, 'szukaj_stworzenia.sql?login='||$login||'&gra='||gra||'&offset=0&page=10' as action
 from help_list
 where nazwa='Gra'
 and id = $id::BIGINT;
@@ -41,9 +41,9 @@ with imie as (
     join help_list hl on hl.id=s.gra_id
     -- list of names depends on the game
     where nazwa = 'Gra'
-        and case when $id::bigint = 1 then s.gra_id = 1
-        when $id::bigint = 2 then s.gra_id = 2
-        when $id::bigint = 3 then s.gra_id in (1,2)
+        and case when $gra::bigint = 1 then s.gra_id = 1
+        when $gra::bigint = 2 then s.gra_id = 2
+        when $gra::bigint = 3 then s.gra_id in (1,2)
         end
 )
 -- select genus
@@ -162,7 +162,7 @@ with uprawnienia AS (
 )
 select 'Dodaj nowe stworzenie' as title
 , 'Dodaj' as validate
-, 'Akcje/dodaj_stworzenie.sql?gra='||$id||'' as link
+, 'Akcje/dodaj_stworzenie.sql?login='||$login||'&gra='||$gra||'' as link
 , 'cyan' as color
 from uprawnienia
 where widok_edycja = 'EDYCJA';
@@ -174,8 +174,8 @@ select 'table' as component
 
 select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 3", "Trik 4", "Trik 5", "Trik 6"
     , case when gold = true then 'check' else null end as "Złoty"
-    , '[Usuń](Akcje/usun_stworzenie.sql?gra='||$id||'&id='||stw_id||') 
-    [Edytuj](Akcje/edytuj_stworzenie.sql?gra='||$id||'&id='||stw_id||')' as akcje
+    , '[Usuń](Akcje/usun_stworzenie.sql?gra='||$gra||'&id='||stw_id||') 
+    [Edytuj](Akcje/edytuj_stworzenie.sql?gra='||$gra||'&id='||stw_id||')' as akcje
       from (
          select stw.gra_id as gra
          , stw.id as stw_id, stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec
@@ -193,9 +193,9 @@ select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 
          join gatunek g on g.g_id = s.gatunek_id
          join recepta r on r.id = g.przysmak_id
       ) as dane
-where case when $id::bigint = 1 then gra = 1 
-    when $id::bigint = 2 then gra = 2
-    when $id::bigint = 3 then gra in (1,2) end
+where case when $gra::bigint = 1 then gra = 1 
+    when $gra::bigint = 2 then gra = 2
+    when $gra::bigint = 3 then gra in (1,2) end
     and user_id = (select id from users where login = $login)
     and id >= COALESCE($start_id::integer,0)
     order by dane.id
@@ -207,12 +207,12 @@ select 'button' as component
 , true as center;
 
 select '|<' as title
-, '?login='||$login||'&id='||$id||'&offset=0&page='||COALESCE($page::integer,10) as link
+, '?login='||$login||'&gra='||$gra||'&offset=0&page='||COALESCE($page::integer,10) as link
 , $offset::integer <= 0 as disabled;
 
 select '<<' as title
-, '?login='||$login||'&id='||$id||'&offset='||(COALESCE($offset::integer,0) - COALESCE($page::integer,5))||'&page='||COALESCE($page::integer,5) as LINK
+, '?login='||$login||'&gra='||$gra||'&offset='||(COALESCE($offset::integer,0) - COALESCE($page::integer,5))||'&page='||COALESCE($page::integer,5) as LINK
 , $offset::integer <= 0 as disabled;
 
 select '>>' as title
-, '?login='||$login||'&id='||$id||'&offset='||(COALESCE($offset::integer,0)+COALESCE($page::integer,5))||'&page='||COALESCE($page::integer,5) as link;
+, '?login='||$login||'&gra='||$gra||'&offset='||(COALESCE($offset::integer,0)+COALESCE($page::integer,5))||'&page='||COALESCE($page::integer,5) as link;
