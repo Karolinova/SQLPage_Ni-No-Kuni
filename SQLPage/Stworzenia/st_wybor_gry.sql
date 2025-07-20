@@ -12,8 +12,8 @@ select
 select 'title' as component
    , wartosc as contents
    , true as center
-   from help_list
-   where id = $id::BIGINT;
+   from lista_gier
+   where id = $gra::BIGINT;
 
 -- Add filtration to table
 select 'form' as component
@@ -21,9 +21,7 @@ select 'form' as component
 , 'Szukaj' as validate
 , 'przycisk' as class
 , 'Wyczyść' as reset
-, 'szukaj_stworzenia.sql?login='||$login||'&gra='||gra||'&offset=0&page=10' as action
-   from lista_gier
-   where id = $gra::BIGINT;
+, 'szukaj_stworzenia.sql?login='||$login||'&gra='||$gra||'&offset=0&page=10' as action;
 
 -- select name
 with imie as (
@@ -37,10 +35,9 @@ with imie as (
     , 2 as width
     from (
         select gra_id, imie from stworzenia_nnk order by imie) s
-    join help_list hl on hl.id=s.gra_id
+    join lista_gier hl on hl.id=s.gra_id
     -- list of names depends on the game
-    where nazwa = 'Gra'
-        and case when $gra::bigint = 1 then s.gra_id = 1
+    where case when $gra::bigint = 1 then s.gra_id = 1
         when $gra::bigint = 2 then s.gra_id = 2
         when $gra::bigint = 3 then s.gra_id in (1,2)
         end
@@ -173,8 +170,8 @@ select 'table' as component
 
 select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 3", "Trik 4", "Trik 5", "Trik 6"
     , case when gold = true then 'check' else null end as "Złoty"
-    , '[Usuń](Akcje/usun_stworzenie.sql?gra='||$gra||'&id='||stw_id||') 
-    [Edytuj](Akcje/edytuj_stworzenie.sql?gra='||$gra||'&id='||stw_id||')' as akcje
+    , '[Usuń](Akcje/usun_stworzenie.sql?login='||$login||'&gra='||$gra||'&id='||stw_id||') 
+    [Edytuj](Akcje/edytuj_stworzenie.sql?login='||$login||'&gra='||$gra||'&id='||stw_id||')' as akcje
       from (
          select stw.gra_id as gra
          , stw.id as stw_id, stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec

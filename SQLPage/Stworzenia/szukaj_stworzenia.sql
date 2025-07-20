@@ -7,27 +7,21 @@ select 'dynamic' as component
    ;
 select 
     'st_wybor_gry.sql?login='||$login||'&gra='||$gra||'&offset=0&page=10' as link,
-    'Powrót'  as title
-    from help_list
-    where nazwa='Gra'
-    and id = $id::BIGINT;
+    'Powrót'  as title;
 
 -- Add title to page
 select 'title' as component
 , wartosc as contents
 , true as center
-from help_list 
-where id = $id::BIGINT
-and nazwa = 'Gra'; 
+from lista_gier
+where id = $id::BIGINT; 
 
 -- Add second filtration
 select 'form' as component
 , 'Szukaj stworzenia' as title
 , 'Szukaj' as validate
 , 'przycisk' as class
-, 'szukaj_stworzenia.sql?login='||$login||'&gra='||$gra||'&offset=0&page=10' as action
-from lista_gier
-where id = $id::BIGINT; 
+, 'szukaj_stworzenia.sql?login='||$login||'&gra='||$gra||'&offset=0&page=10' as action; 
 
 
 -- Name is selected
@@ -181,8 +175,8 @@ select 'table' as component
 
 select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 3", "Trik 4", "Trik 5", "Trik 6"
     , case when gold = true then 'check' else null end as "Złoty"
-    ,  '[Usuń](Akcje/usun_stworzenie.sql?gra='||$gra||'&id='||stw_id||') 
-    [Edytuj](Akcje/edytuj_stworzenie.sql?gra='||$gra||'&id='||stw_id||')' as akcje
+    ,  '[Usuń](Akcje/usun_stworzenie.sql?login='||$login||'&gra='||$gra||'&id='||stw_id||') 
+    [Edytuj](Akcje/edytuj_stworzenie.sql?login='||$login||'&gra='||$gra||'&id='||stw_id||')' as akcje
       from (
          select stw.gra_id as gra --Ni no Kuni: Wrath of the White Witch
          , stw.id as stw_id, stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec 

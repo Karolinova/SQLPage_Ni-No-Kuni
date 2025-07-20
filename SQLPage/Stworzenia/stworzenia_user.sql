@@ -21,7 +21,7 @@ select 'form' as component
 , 'Wybór użytkownika' as title
 , 'Wybierz' as validate
 , 'przycisk' as class
-, 'stworzenia.sql?gra='||$gra||'' as action;
+, 'redirect_page.sql?gra='||$gra||'' as action;
 
 
 with lista_uzytkownikow as (
