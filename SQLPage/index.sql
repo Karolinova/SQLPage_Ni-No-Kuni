@@ -1,4 +1,5 @@
-select 'dynamic' as component, sqlpage.run_sql('shell.sql') as properties;
+select 'shell' as component
+, 'Twórca: Karolinova' as footer;
 
 select 'form' as component
 , 'Zaloguj się' as validate
