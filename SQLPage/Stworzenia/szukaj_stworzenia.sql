@@ -26,10 +26,9 @@ select 'form' as component
 , 'Szukaj' as validate
 , 'przycisk' as class
 , 'szukaj_stworzenia.sql?login='||$login||'&gra='||$gra||'&offset=0&page=10' as action
-from help_list hl
-where hl.nazwa='Gra'
-and id = $id::BIGINT
-;
+from lista_gier
+where id = $id::BIGINT; 
+
 
 -- Name is selected
 with imie as (

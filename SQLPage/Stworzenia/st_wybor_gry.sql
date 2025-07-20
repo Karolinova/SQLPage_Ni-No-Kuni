@@ -22,9 +22,8 @@ select 'form' as component
 , 'przycisk' as class
 , 'Wyczyść' as reset
 , 'szukaj_stworzenia.sql?login='||$login||'&gra='||gra||'&offset=0&page=10' as action
-from help_list
-where nazwa='Gra'
-and id = $id::BIGINT;
+   from lista_gier
+   where id = $gra::BIGINT;
 
 -- select name
 with imie as (
