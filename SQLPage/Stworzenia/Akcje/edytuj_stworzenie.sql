@@ -5,7 +5,7 @@ select 'dynamic' as component
  Select 'button' as component
     ,'sm' as size;
 select 
-    '/Stworzenia/st_wybor_gry.sql?id='||id||'&offset=0&page=10' as link,
+    '/Stworzenia/st_wybor_gry.sql?login='||$login||'&id='||id||'&offset=0&page=10' as link,
     'Powrót'  as title
     from help_list
     where nazwa='Gra'
@@ -28,7 +28,7 @@ from uprawnienia u;
 -- Add form to edit data
 select 'form' as component
 , 'Zmień dane stworzenia' as title
-, 'update_stw.sql?gra='||$gra||'&stw_id='||$id||'' as action
+, 'update_stw.sql?login='||$login||'&gra='||$gra||'&stw_id='||$id||'' as action
 , 'Edytuj' as validate;
 
 -- Name
