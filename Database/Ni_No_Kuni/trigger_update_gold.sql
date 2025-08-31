@@ -12,3 +12,8 @@ create TRIGGER update_gold
 after insert on stworzenia
 for each row
 execute function update_stw_gold();
+
+create TRIGGER ins_update_gold
+after update on stworzenia
+for each row
+execute function update_stw_gold();
