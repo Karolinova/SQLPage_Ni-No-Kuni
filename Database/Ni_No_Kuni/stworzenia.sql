@@ -16,5 +16,7 @@ create table stworzenia (id bigserial primary key
 , gatunek_id int
 , constraint FK_gatunek foreign key(gatunek_id) references gatunek (g_id)
 , gold boolean
+, gra_id int
+, constraint FK_gra foreign key(gra_id) references lista_gier (id)
 );
 
