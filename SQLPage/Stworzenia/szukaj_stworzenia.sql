@@ -36,7 +36,9 @@ with imie as (
         'selected', imie = $imie )) as options
     , 2 as width
     from (
-        select gra_id, imie from stworzenia_nnk order by imie) s
+        select s.gra_id, sn.imie from stworzenia_nnk sn 
+        join stworzenia s on s.id = sn.id
+        order by imie) s
     where case when $gra::BIGINT = 1 then s.gra_id = 1
         when $gra::BIGINT = 2 then s.gra_id = 2
         when $gra::BIGINT = 3 then s.gra_id in (1,2)
@@ -178,7 +180,7 @@ select imie, nazwa, gatunek, nazwa_rec as "Przysmak", "Trik 1", "Trik 2", "Trik 
     ,  '[Usuń](Akcje/usun_stworzenie.sql?login='||$login||'&gra='||$gra||'&id='||stw_id||') 
     [Edytuj](Akcje/edytuj_stworzenie.sql?login='||$login||'&gra='||$gra||'&id='||stw_id||')' as akcje
       from (
-         select stw.gra_id as gra --Ni no Kuni: Wrath of the White Witch
+         select s.gra_id as gra --Ni no Kuni: Wrath of the White Witch
          , stw.id as stw_id, stw.imie, s.nazwa, g.nazwa as gatunek, r.nazwa as nazwa_rec 
          , t1.nazwa as "Trik 1", t2.nazwa as "Trik 2", t3.nazwa as "Trik 3"
          , t4.nazwa as "Trik 4", t5.nazwa as "Trik 5", t6.nazwa as "Trik 6"

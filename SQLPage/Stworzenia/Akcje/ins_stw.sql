@@ -1,7 +1,6 @@
 insert into stworzenia_nnk (imie, stw_id, gra_id, user_id)
 select :imie as imie
 , id as stw_id
-, $gra::int as gra_id
 , (select id from users where login = $login) as user_id
 from stworzenia
 where nazwa = :nazwa
