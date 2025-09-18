@@ -70,7 +70,7 @@ select 'list' as component
 
 select nazwa as title
 , 'Akcje/modyfikuj_stw.sql?gra='||$gra||'&id='||id||'' as edit_link
-, '[Edytuj](Akcje/usun_stw.sql?gra='||$gra||'&id='||id||')' as delete_link
+, '(Akcje/usun_stw.sql?gra='||$gra||'&id='||id||')' as delete_link
 from stworzenia
 where gra_id = $gra::int
 and (left(nazwa,1) ilike $litera or $litera is null)
