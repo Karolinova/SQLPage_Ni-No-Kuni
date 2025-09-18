@@ -19,6 +19,7 @@ select 'title' as component
 select 'form' as component
 , 'Dane stworzenia' as title
 , 'Modyfikuj' as validate
+, 'update_new_stw.sql?&gra='||$gra||'&id='||$id||'' as action
 ;
 
 -- Name of genus
