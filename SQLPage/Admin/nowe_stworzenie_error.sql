@@ -8,18 +8,18 @@ select
     '/strona_glowna_gry.sql?gra='||$gra||'' as link,
     'Powrót'  as title;
 
+-- Error - kouminikat
+select 'alert' as component
+, 'Błąd!' as title
+, 'Zostało wybranych więcej trików - maksymalna liczba to 6.' as description
+, 'red' as color;
+
 -- Add header
 select 'title' as component
 , 'Dodaj dane nowego stworzenia' as contents
 , 3 as LEVEL
 , true as center
 ;
-
--- Error - kouminikat
-select 'alert' as component
-, 'Błąd!' as title
-, 'Zostało wybranych więcej trików - maksymalna liczba to 6.' as description
-, 'red' as color;
 
 -- Add form to add data
 select 'form' as component
@@ -32,6 +32,7 @@ select 'form' as component
 select 'Nazwa' as label
 , 'name' as name
 , true as required
+, $name as value
 ;
 
 -- Genus
@@ -40,7 +41,10 @@ select 'select' as type
 , 'Gatunek' as label
 , jsonb_agg(json_build_object(
     'label', nazwa,
-    'value', g_id
+    'value', g_id,
+    'selected', nazwa = (select g.nazwa 
+        from gatunek g
+        where g.g_id = $gatunek::BIGINT)
 )) as OPTIONS
 from (select distinct g.nazwa, g_id
         from gatunek g order by g.nazwa ) g
