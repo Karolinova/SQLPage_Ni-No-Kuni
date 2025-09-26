@@ -8,16 +8,16 @@ select
     '/strona_glowna_gry.sql?gra='||$gra||'' as link,
     'Powrót'  as title;
 
-select 
-    'title'   as component
-    , 'Lista stworzeń' as contents
-    , true as center;
-
 -- Error - kouminikat
 select 'alert' as component
 , 'Błąd!' as title
 , 'Zostało wybranych więcej trików - maksymalna liczba to 6.' as description
 , 'red' as color;
+
+select 
+    'title'   as component
+    , 'Lista stworzeń' as contents
+    , true as center;
 
 select 
     'tab' as component,
@@ -72,11 +72,12 @@ select 'Z' as title
 
 select 'list' as component
 , TRUE as search
+, 'true' as compact
 ;
 
 select nazwa as title
 , 'Akcje/modyfikuj_stw.sql?gra='||$gra||'&id='||id||'' as edit_link
-, '(Akcje/usun_stw.sql?gra='||$gra||'&id='||id||')' as delete_link
+, 'Akcje/usun_stw.sql?gra='||$gra||'&id='||id||'' as delete_link
 from stworzenia
 where gra_id = $gra::int
 and (left(nazwa,1) ilike $litera or $litera is null)
