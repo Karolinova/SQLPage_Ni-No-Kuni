@@ -19,7 +19,7 @@ select 'redirect' as component
     , case when (select i from licznik_trikow)> 6 
         then '/Admin/nowe_stworzenie_error.sql?gra='||$gra||'&name='||$name||'&gatunek='||$gatunek||''  
       when (select i from licznik_trikow) < 7
-        then '/Admin/nowe_stworzenie.sql?gra='||$gra||'' end as link
+        then '/Admin/nowe_stworzenie_success.sql?gra='||$gra||'&name='||$name||'' end as link
       ;
 
 
