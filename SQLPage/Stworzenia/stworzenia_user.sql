@@ -1,5 +1,5 @@
 select 'dynamic' as component
-, sqlpage.run_sql('shell_stw.sql') AS properties;
+, sqlpage.run_sql('shell.sql') AS properties;
 
 -- Add return button
  Select 'button' as component
