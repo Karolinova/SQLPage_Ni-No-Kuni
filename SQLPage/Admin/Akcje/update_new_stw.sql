@@ -17,10 +17,10 @@ with licznik_trikow as (
 )
 select 'redirect' as component
     , case when (select i from licznik_trikow)> 6 
-        then '/Admin/modyfikuj_usun_stworzenie_error.sql?gra='||$gra||'&name='||$name||'&gatunek='||$gatunek||''  
+        then '/Admin/modyfikuj_usun_stworzenie_error.sql?gra='||$gra||''
       when (select i from licznik_trikow) < 7
         then 
-       '/Admin/modyfikuj_usun_stworzenie.sql?gra='||$gra||'' end as link
+       '/Admin/modyfikuj_usun_stworzenie_success.sql?gra='||$gra||'&name='||$name||'' end as link
       ;
 
 
