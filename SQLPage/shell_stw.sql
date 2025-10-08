@@ -20,4 +20,11 @@ from users
 where id = (select user_id from user_log
             where token=sqlpage.cookie('session_token'))
   and login = 'Admin') as menu_item
+, (select jsonb_build_array(
+  jsonb_build_object('title', 'Zarządzanie tabelami', 'link', '/Admin/nowe_dane.sql?gra=' ||$gra||'')
+) as menu_item
+from users
+where id = (select user_id from user_log
+            where token=sqlpage.cookie('session_token'))
+  and login = 'Admin') as menu_item
 ;
