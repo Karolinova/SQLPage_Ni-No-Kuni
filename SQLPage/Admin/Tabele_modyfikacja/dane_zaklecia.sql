@@ -14,6 +14,18 @@ select
     , 'Zaklęcia' as contents
     , true as center;
 
+-- Add field with upload data
+select 'form' as component
+, 'Import danych za pomocą pliku CSV' as title
+, 'Prześlij' as validate
+, 'Import/spell_upload.sql?gra='||$gra||'' as action;
+select 'spell_data_upload' as name
+, 'file' as type
+, 'text/csv' as accept
+, 'Importuj zaklęcia' as label
+, 'Podaj w pliku nazwę (kolumna nazwa) oraz określ, czy to jest stworzenie, czy postać (kolumna stworzenie_postać) oraz podaj id gry (kolumna gra_id).' as description
+, true as required;
+
 -- Add list to page
 select 'list' as component
 , TRUE as search
