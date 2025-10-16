@@ -26,5 +26,5 @@ select nazwa as title
 , 'Akcje/usun_zaklecie.sql?gra='||$gra||'&id='||id||'' as delete_link
 from triki_zaklecia
 where gra_id = $gra::int
-and stworzenie_postac = 'S'
+and stworzenie_postac = 'P'
 order by nazwa;
